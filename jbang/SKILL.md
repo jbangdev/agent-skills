@@ -1,6 +1,6 @@
 ---
 name: jbang
-description: JBang as a universal Java launcher and tool manager — run JARs, Maven artifacts, and remote scripts without writing any code. Use this skill when the user wants to run a JAR or WAR file, execute a Maven artifact by GAV coordinates, install a Java tool as a system command, manage JDK versions, browse the JBang AppStore, set up catalogs to publish or distribute Java apps, run remote scripts from URLs or GitHub, or use JBang in CI/CD pipelines. Also triggers for "jbang app install", "jbang jdk", running anything by Maven coordinates, or publishing apps via catalogs. This skill is about USING and DISTRIBUTING Java tools — for WRITING JBang scripts, see the jbang-scripting skill instead.
+description: JBang as a universal Java launcher and tool manager — run and debug JARs, Maven artifacts, and remote scripts without writing any code. Use this skill when the user wants to run or debug a JAR or WAR file, execute a Maven artifact by GAV coordinates, attach a debugger to a Java app, install a Java tool as a system command, manage JDK versions, browse the JBang AppStore, set up catalogs to publish or distribute Java apps, run remote scripts from URLs or GitHub, or use JBang in CI/CD pipelines. Also triggers for "jbang app install", "jbang jdk", "jbang --debug", running or debugging anything by Maven coordinates, or publishing apps via catalogs. This skill is about USING and DISTRIBUTING Java tools — for WRITING JBang scripts, see the jbang-scripting skill instead.
 ---
 
 # JBang — Universal Java Launcher & Tool Manager
@@ -73,6 +73,42 @@ jbang -c 'System.out.println("Hello from JBang!")'
 jbang --interactive                                      # Plain JShell
 jbang --interactive myapp.java                           # JShell with your code + deps loaded
 ```
+
+## Debugging
+
+The same `--debug` flag works for anything JBang runs — a script, a local JAR, a
+remote URL, or a Maven artifact. By default it starts the JVM with JDWP enabled,
+**suspends**, and waits for a debugger to attach on port **4004**.
+
+```bash
+jbang --debug myapp.jar                                  # Wait for debugger on localhost:4004
+jbang --debug=5005 myapp.jar                             # Custom port
+jbang --debug=*:5005 myapp.jar                           # Listen on all interfaces (containers/remote)
+jbang --debug com.h2database:h2:2.2.224                  # Debug a Maven artifact
+jbang --debug https://example.com/app.jar                # Debug a remote JAR
+
+# Don't suspend — start running immediately, attach whenever
+jbang --debug=suspend=false,address=5005 myapp.jar
+```
+
+`--debug` takes either a host/port or a comma-separated list of JPDA options
+(`transport`, `server`, `suspend`, `address`). Make it the default once:
+
+```bash
+jbang config set run.debug 5005
+```
+
+### Attach from an IDE
+
+JBang prints `Listening for transport dt_socket at address: <port>`. Attach a
+**Remote JVM Debug** / **Attach to Remote Program** run configuration to that
+host and port:
+
+- **IntelliJ IDEA** — Run → Edit Configurations → `+` → Remote JVM Debug → set the port → Debug.
+- **VS Code** (Java extension) — add an `"attach"` config in `launch.json` with the matching `hostName`/`port`, then press F5.
+
+To edit and debug a script with full IDE support, `jbang edit myapp.java` opens
+it as a project the IDE already understands (see the jbang-scripting skill).
 
 ## Aliases & Catalogs
 

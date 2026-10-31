@@ -111,6 +111,7 @@ jbang hello@jbangdev                     # Run from catalog alias
 ./myapp.java                             # Direct execution (Unix, after chmod +x)
 jbang --native myapp.java                # Build + run native binary
 jbang --jfr myapp.java                   # Run with Flight Recorder
+jbang --debug myapp.java                 # Wait for a debugger to attach (see the jbang skill)
 jbang --interactive myapp.java           # REPL mode with jshell
 ```
 
