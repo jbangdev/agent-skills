@@ -6,7 +6,8 @@ AI agent skill definitions for [JBang](https://www.jbang.dev) — discoverable v
 
 | Skill | Description |
 |-------|-------------|
-| [jbang-usage](jbang-usage/SKILL.md) | How to install, configure, and run JBang |
+| [jbang](jbang/SKILL.md) | Use JBang as a universal Java launcher and tool manager — run/debug JARs, Maven artifacts, and remote scripts, install tools, manage JDKs, and publish catalogs. No code writing required. |
+| [jbang-scripting](jbang-scripting/SKILL.md) | Write single-file Java scripts with inline dependencies (`//DEPS`), templates, and directives — no project setup. |
 
 ## Discovery
 
